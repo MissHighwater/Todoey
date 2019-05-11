@@ -11,9 +11,15 @@ import UIKit
 class ToDoListViewController: UITableViewController {
     
     var itemArray = ["Buy eggs", "Buy wine", "Buy cheese"]
+    var defaults = UserDefaults()
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        if let items = defaults.array(forKey: "ToDoLlistArray")  as? [String] {
+            itemArray = items
+        }
         
     }
 
@@ -39,10 +45,11 @@ class ToDoListViewController: UITableViewController {
         
 //        print(itemArray[indexPath.row])
         
-        if tableView.cellForRow(at: indexPath)?.accessoryType == .checkmark{
+        if tableView.cellForRow(at: indexPath)?.accessoryType == .checkmark {
             tableView.cellForRow(at: indexPath)?.accessoryType = .none
         }
         else {
+            
             tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
         }
         
@@ -57,11 +64,12 @@ class ToDoListViewController: UITableViewController {
         
         let alert = UIAlertController(title: "Add New Todoey Item", message: "", preferredStyle: .alert)
         
-        
         let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
-            //What will happen once the user clicks the Add Item button on UI Alert
             
             self.itemArray.append(textField.text!)
+            
+            self.defaults.set(self.itemArray, forKey: "ToDoListArray")
+            
             self.tableView.reloadData()
            
         }
@@ -70,7 +78,6 @@ class ToDoListViewController: UITableViewController {
         
             alertTextField.placeholder = "Create new item..."
             textField = alertTextField
-
             
         }
         
